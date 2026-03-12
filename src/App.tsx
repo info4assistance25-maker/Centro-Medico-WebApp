@@ -24,7 +24,8 @@ import {
   X,
   Sparkles,
   Image as ImageIcon,
-  Video as VideoIcon
+  Video as VideoIcon,
+  CheckCircle2
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -461,6 +462,14 @@ const ThreeDSection = () => {
 };
 
 const Contact = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulazione invio
+    setIsSubmitted(true);
+  };
+
   return (
     <section id="contatti" className="py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -525,24 +534,24 @@ const Contact = () => {
             className="bg-white rounded-[3rem] p-10 md:p-16 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-slate-100"
           >
             <h3 className="text-3xl font-display font-bold text-slate-950 mb-10">Richiedi Appuntamento</h3>
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700 ml-1">Nome</label>
-                  <input type="text" className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="Mario" />
+                  <input type="text" required className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="Mario" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700 ml-1">Cognome</label>
-                  <input type="text" className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="Rossi" />
+                  <input type="text" required className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="Rossi" />
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">Email</label>
-                <input type="email" className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="mario.rossi@email.com" />
+                <input type="email" required className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="mario.rossi@email.com" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">Telefono</label>
-                <input type="tel" className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="+39 333 1234567" />
+                <input type="tel" required className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" placeholder="+39 333 1234567" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">Servizio</label>
@@ -555,7 +564,7 @@ const Contact = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">Data Preferita</label>
-                <input type="date" className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" />
+                <input type="date" required className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 outline-none transition-all font-medium" />
               </div>
               <button type="submit" className="w-full bg-slate-950 text-white font-bold py-5 rounded-2xl hover:bg-blue-600 transition-all shadow-2xl shadow-slate-950/20 hover:shadow-blue-500/40 mt-6 flex items-center justify-center gap-3 text-lg">
                 <Calendar className="w-6 h-6" /> Invia Richiesta
@@ -567,6 +576,41 @@ const Contact = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {isSubmitted && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSubmitted(false)}
+              className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl border border-slate-100 text-center"
+            >
+              <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                <CheckCircle2 className="w-12 h-12" />
+              </div>
+              <h3 className="text-3xl font-display font-bold text-slate-950 mb-4">Richiesta Inviata!</h3>
+              <p className="text-lg text-slate-600 mb-10 leading-relaxed font-medium">
+                Grazie per averci scelto. Il nostro staff prenderà in carico la tua richiesta e ti ricontatterà al più presto per confermare l'appuntamento.
+              </p>
+              <button
+                onClick={() => setIsSubmitted(false)}
+                className="w-full bg-blue-600 text-white font-bold py-5 rounded-2xl hover:bg-slate-950 transition-all shadow-xl shadow-blue-500/30"
+              >
+                Ho capito
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
@@ -653,15 +697,47 @@ const Footer = () => {
   );
 };
 
+const FloatingSideMenu = () => {
+  const menuItems = [
+    { id: 'servizi', label: 'Servizi', icon: <Stethoscope className="w-5 h-5" /> },
+    { id: 'chi-siamo', label: 'Chi Siamo', icon: <Clock className="w-5 h-5" /> },
+    { id: 'modelli-3d', label: 'Modelli 3D', icon: <Activity className="w-5 h-5" /> },
+    { id: 'ai-lab', label: 'AI Lab', icon: <Sparkles className="w-5 h-5" /> },
+    { id: 'contatti', label: 'Contatti', icon: <Phone className="w-5 h-5" /> },
+  ];
+
+  return (
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-4">
+      {menuItems.map((item) => (
+        <a
+          key={item.id}
+          href={`#${item.id}`}
+          className="group relative flex items-center justify-center w-12 h-12 glass rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-lg border border-white/40"
+        >
+          <div className="text-slate-600 group-hover:text-white transition-colors">
+            {item.icon}
+          </div>
+          
+          {/* Tooltip */}
+          <div className="absolute right-full mr-4 px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all pointer-events-none whitespace-nowrap shadow-xl">
+            {item.label}
+          </div>
+        </a>
+      ))}
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-blue-100 selection:text-blue-900">
       <Navbar />
+      <FloatingSideMenu />
       <Hero />
       <Services />
       <About />
       <ThreeDSection />
-      <section className="py-24 bg-white">
+      <section id="modelli-3d" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Esploratore Anatomico</h2>

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, OrbitControls, Text, Html } from '@react-three/drei';
+import { Float, OrbitControls, Text, Html, Environment, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -24,11 +24,13 @@ const DNASphere = ({ position, color, emissive, label }: { position: [number, nu
       onPointerOut={() => setHovered(false)}
       onClick={() => setSelected(!selected)}
     >
-      <sphereGeometry args={[0.15, 16, 16]} />
+      <sphereGeometry args={[0.15, 20, 20]} />
       <meshStandardMaterial 
         color={selected ? '#fbbf24' : (hovered ? '#60a5fa' : color)} 
         emissive={selected ? '#f59e0b' : (hovered ? '#3b82f6' : emissive)} 
         emissiveIntensity={hovered || selected ? 2 : 0.5} 
+        roughness={0.2}
+        metalness={0.8}
       />
       {(hovered || selected) && (
         <Html distanceFactor={10}>
@@ -153,18 +155,27 @@ const MedicalScene = () => {
         )}
       </AnimatePresence>
 
-      <Canvas camera={{ position: [0, 0, 10], fov: 45 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 10], fov: 45 }} dpr={[1, 2]} shadows>
         <color attach="background" args={['#020617']} />
         <fog attach="fog" args={['#020617', 5, 20]} />
+        <Environment preset="night" />
         
-        <ambientLight intensity={0.4} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} color="#3b82f6" />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#06b6d4" />
-        <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={2} castShadow />
+        <ambientLight intensity={0.2} />
+        <pointLight position={[10, 10, 10]} intensity={1} color="#3b82f6" />
+        <pointLight position={[-10, -10, -10]} intensity={0.3} color="#06b6d4" />
+        <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={1.5} castShadow />
         
         <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
           <DNAHelix />
         </Float>
+
+        <ContactShadows 
+          position={[0, -6, 0]} 
+          opacity={0.4} 
+          scale={20} 
+          blur={2} 
+          far={10} 
+        />
 
         <OrbitControls 
           enableZoom={true} 

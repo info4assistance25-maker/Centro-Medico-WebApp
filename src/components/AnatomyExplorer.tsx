@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, OrbitControls, Html, MeshDistortMaterial, Sphere, MeshWobbleMaterial } from '@react-three/drei';
+import { Float, OrbitControls, Html, MeshDistortMaterial, Sphere, MeshWobbleMaterial, Environment, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'motion/react';
 import { Heart, Brain, Bug, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -26,6 +26,8 @@ const HeartModel = () => {
           radius={1} 
           emissive="#991b1b"
           emissiveIntensity={0.5}
+          roughness={0.2}
+          metalness={0.8}
         />
       </mesh>
       {/* Arteries */}
@@ -72,8 +74,10 @@ const BrainModel = () => {
         <meshStandardMaterial 
           color="#8b5cf6" 
           transparent 
-          opacity={0.2} 
+          opacity={0.3} 
           wireframe
+          emissive="#8b5cf6"
+          emissiveIntensity={0.2}
         />
       </mesh>
       {nodes.map((node, i) => (
@@ -125,6 +129,8 @@ const VirusModel = () => {
           factor={0.2} 
           emissive="#065f46"
           emissiveIntensity={0.5}
+          roughness={0.3}
+          metalness={0.7}
         />
       </mesh>
       {spikes.map((pos, i) => (
@@ -219,11 +225,12 @@ const AnatomyExplorer = () => {
         </button>
       </div>
 
-      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} dpr={[1, 2]} shadows>
         <color attach="background" args={['#020617']} />
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} />
-        <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={2} />
+        <Environment preset="studio" />
+        <ambientLight intensity={0.3} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
+        <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={1.5} castShadow />
         
         <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
           <AnimatePresence mode="wait">
@@ -232,6 +239,14 @@ const AnatomyExplorer = () => {
             {currentModel === 'virus' && <VirusModel key="virus" />}
           </AnimatePresence>
         </Float>
+
+        <ContactShadows 
+          position={[0, -5, 0]} 
+          opacity={0.4} 
+          scale={15} 
+          blur={2} 
+          far={8} 
+        />
 
         <OrbitControls 
           enableZoom={true} 
